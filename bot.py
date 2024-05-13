@@ -1,9 +1,9 @@
 from pyrogram import Client, filters
 
 # Replace "your_api_id", "your_api_hash", and "your_bot_token" with your actual credentials
-api_id = "your_api_id"
-api_hash = "your_api_hash"
-bot_token = "your_bot_token"
+api_id = "27215224"
+api_hash = "688ae67db37f0ae991c3ecb97d73ff0a"
+bot_token = "6719248453:AAHelBz9mWGRaXlr5rxs8r1P762wRap3Lgk"
 
 # Create a Pyrogram Client
 app = Client("my_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
