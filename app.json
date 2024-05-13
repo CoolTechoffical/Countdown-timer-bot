@@ -1,0 +1,29 @@
+{
+  "name": "countdown-timer-bot",
+  "description": "A simple countdown timer bot using Pyrogram",
+  "version": "1.0.0",
+  "env": {
+    "PYTHONPATH": ".",
+    "API_ID": "your_api_id",
+    "API_HASH": "your_api_hash",
+    "BOT_TOKEN": "your_bot_token"
+  },
+  "scripts": {
+    "start": "python countdown_bot.py"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jeronmathew44/Countdown-timer-bot"
+  },
+  "keywords": ["countdown", "timer", "bot", "pyrogram"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Your Name",
+      "email": "your_email@example.com"
+    }
+  ],
+  "dependencies": {
+    "pyrogram": "1.4.3"
+  }
+}
