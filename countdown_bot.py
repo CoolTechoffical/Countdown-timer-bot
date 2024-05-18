@@ -13,9 +13,11 @@ flask_app = Flask(__name__)
 def home():
     return "Hello, this is the web service!"
 
+# Retrieve environment variables
+api_id = int(os.getenv('27215224'))
+api_hash = os.getenv('688ae67db37f0ae991c3ecb97d73ff0a')
+
 # Pyrogram client setup
-api_id = os.getenv('API_ID')
-api_hash = os.getenv('API_HASH')
 bot = Client("countdown_bot", api_id=api_id, api_hash=api_hash)
 
 # Define a command handler for the /set command
