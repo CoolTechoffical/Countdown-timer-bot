@@ -41,4 +41,4 @@ async def help_command(client, message):
 
 
 # Run the bot
-app.run()
+bot.run()
