@@ -1,3 +1,4 @@
 pyrogram==1.4.3
 pytz
-tgcrypto python-dotenv
+tgcrypto 
+python-dotenv
