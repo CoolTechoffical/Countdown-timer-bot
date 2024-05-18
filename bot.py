@@ -8,23 +8,18 @@ api_hash = "You_api_hash"
 bot_token = "Your_bot_token"
 
 # Create a Pyrogram Client
-app = Client("my_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
+app = Client("countdown_bot")
 
 # Define a command handler for the /start command
 @app.on_message(filters.command("start"))
-def start(client, message):
-    message.reply_text("Hello! I'm your bot.")
+async def start_command(client, message):
+    welcome_message = "Welcome to the Countdown Timer Bot!\nSend me the time in seconds, minutes, or hours to start the countdown."
 
-# Define a command handler for the /help command
-@app.on_message(filters.command("help"))
-def help(client, message):
-    help_text = (
-        "Welcome to my bot!\n\n"
-        "You can use the following commands:\n"
-        "/start - Start the bot\n"
-        "/help - Display this help message"
-    )
-    message.reply_text(help_text)
+    # Create InlineKeyboardButtons for joining the support group
+    support_button = InlineKeyboardButton("Join Support Group", url="https://t.me/XBOTSUPPORTS")
+    keyboard = InlineKeyboardMarkup([[support_button]])
+
+    await message.reply_text(welcome_message, reply_markup=keyboard)
 
 # Run the bot
 app.run()
