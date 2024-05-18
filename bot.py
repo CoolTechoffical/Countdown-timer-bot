@@ -1,4 +1,6 @@
 from pyrogram import Client, filters
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
 
 # Replace "your_api_id", "your_api_hash", and "your_bot_token" with your actual credentials
 api_id = "Ypur_api_id"
