@@ -14,8 +14,12 @@ def home():
     return "Hello, this is the web service!"
 
 # Retrieve environment variables
-api_id = int(os.getenv('27215224'))
-api_hash = os.getenv('688ae67db37f0ae991c3ecb97d73ff0a')
+api_id = int(os.getenv('API_ID'))
+api_hash = os.getenv('API_HASH')
+
+# Ensure the environment variables are set
+if api_id is None or api_hash is None:
+    raise ValueError("Environment variables for API_ID and API_HASH must be set")
 
 # Pyrogram client setup
 bot = Client("countdown_bot", api_id=api_id, api_hash=api_hash)
