@@ -1,6 +1,18 @@
 import os
+import asyncio
+import threading
+from flask import Flask
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from datetime import datetime, timedelta
+import pytz
+
+# Flask app setup
+flask_app = Flask(__name__)
+
+@flask_app.route('/')
+def home():
+    return "Hello, this is the web service!"
 
 # Fetch sensitive data from environment variables
 API_ID = os.getenv("API_ID")
@@ -11,6 +23,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 if not API_ID or not API_HASH or not BOT_TOKEN:
     raise ValueError("Environment variables for API_ID, API_HASH, and BOT_TOKEN must be set")
 
+# Initialize the Pyrogram Client
 bot = Client(
     "countdown_bot",
     api_id=int(API_ID),
@@ -78,16 +91,24 @@ async def set_command(client, message):
             await message.reply_text("Please enter a positive duration.")
             return
 
+        # Convert current time to Asia/Kolkata timezone
+        tz = pytz.timezone('Asia/Kolkata')
+        current_time = datetime.now(tz)
+
+        # Calculate end time
+        end_time = current_time + timedelta(seconds=seconds)
+
         # Send a message indicating the countdown has started
         msg = await message.reply_text(f"⏳ Countdown started for {time_value} {time_unit}.")
 
         # Start the countdown
-        while seconds > 0:
+        while current_time < end_time:
             await asyncio.sleep(1)
-            seconds -= 1
-            hours, remainder = divmod(seconds, 3600)
-            minutes, seconds_remainder = divmod(remainder, 60)
-            await msg.edit_text(f"⏳ Time left: {hours} hours, {minutes} minutes, {seconds_remainder} seconds.")
+            current_time = datetime.now(tz)
+            time_left = end_time - current_time
+            hours, remainder = divmod(time_left.seconds, 3600)
+            minutes, seconds = divmod(remainder, 60)
+            await msg.edit_text(f"⏳ Time left: {hours} hours, {minutes} minutes, {seconds} seconds.")
 
         # Send a message when the countdown is finished
         await msg.edit_text("🚨 Countdown finished!")
@@ -95,5 +116,25 @@ async def set_command(client, message):
     except (ValueError, IndexError):
         await message.reply_text("Please enter a valid duration in the format '/set value unit' (e.g., '/set 10 minutes').")
 
-# Run the bot
-bot.run()
+# Function to run the Flask app
+def run_flask():
+    flask_app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
+# Function to run the Pyrogram bot
+async def run_bot():
+    await bot.start()
+    await bot.idle()
+    await bot.stop()
+
+if __name__ == "__main__":
+    # Create threads for Flask and Pyrogram bot
+    flask_thread = threading.Thread(target=run_flask)
+    bot_thread = threading.Thread(target=lambda: asyncio.run(run_bot()))
+
+    # Start the threads
+    flask_thread.start()
+    bot_thread.start()
+
+    # Join the threads
+    flask_thread.join()
+    bot_thread.join()
