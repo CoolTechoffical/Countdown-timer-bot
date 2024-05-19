@@ -14,15 +14,16 @@ def home():
     return "Hello, this is the web service!"
 
 # Retrieve environment variables
-api_id = int(os.getenv('API_ID'))
-api_hash = os.getenv('API_HASH')
+api_id = int(os.getenv('API_ID', ''))
+api_hash = os.getenv('API_HASH', '')
+bot_token = os.getenv('BOT_TOKEN', '')
 
 # Ensure the environment variables are set
-if api_id is None or api_hash is None:
-    raise ValueError("Environment variables for API_ID and API_HASH must be set")
+if not api_id or not api_hash or not bot_token:
+    raise ValueError("Environment variables for API_ID, API_HASH, and BOT_TOKEN must be set")
 
 # Pyrogram client setup
-bot = Client("countdown_bot", api_id=api_id, api_hash=api_hash)
+bot = Client("countdown_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
 # Define a command handler for the /set command
 @bot.on_message(filters.command("set"))
@@ -104,3 +105,5 @@ if __name__ == "__main__":
     # Join the threads
     flask_thread.join()
     bot_thread.join()
+
+bot.run
