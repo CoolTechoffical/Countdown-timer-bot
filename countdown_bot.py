@@ -138,3 +138,31 @@ if __name__ == "__main__":
     # Join the threads
     flask_thread.join()
     bot_thread.join()
+        # Send a message when the countdown is finished
+        await msg.edit_text("🚨 Countdown finished!")
+
+    except (ValueError, IndexError):
+        await message.reply_text("Please enter a valid duration in the format '/set value unit' (e.g., '/set 10 minutes').")
+
+# Function to run the Flask app
+def run_flask():
+    flask_app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
+# Function to run the Pyrogram bot
+async def run_bot():
+    await bot.start()
+    await bot.idle()
+    await bot.stop()
+
+if __name__ == "__main__":
+    # Create threads for Flask and Pyrogram bot
+    flask_thread = threading.Thread(target=run_flask)
+    bot_thread = threading.Thread(target=lambda: asyncio.run(run_bot()))
+
+    # Start the threads
+    flask_thread.start()
+    bot_thread.start()
+
+    # Join the threads
+    flask_thread.join()
+    bot_thread.join()
