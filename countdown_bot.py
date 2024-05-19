@@ -88,15 +88,15 @@ def run_flask():
     flask_app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 
 # Function to run the Pyrogram bot
-def run_bot():
-    loop = asyncio.new_event_loop()  # Create a new event loop
-    asyncio.set_event_loop(loop)     # Set the new event loop as the current one
-    bot.run()
+async def run_bot():
+    await bot.start()
+    await idle()
+    await bot.stop()
 
 if __name__ == "__main__":
     # Create threads for Flask and Pyrogram bot
     flask_thread = threading.Thread(target=run_flask)
-    bot_thread = threading.Thread(target=run_bot)
+    bot_thread = threading.Thread(target=lambda: asyncio.run(run_bot()))
 
     # Start the threads
     flask_thread.start()
@@ -105,5 +105,3 @@ if __name__ == "__main__":
     # Join the threads
     flask_thread.join()
     bot_thread.join()
-
-bot.run
