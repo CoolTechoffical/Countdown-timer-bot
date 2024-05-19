@@ -30,38 +30,105 @@ bot = Client(
     api_hash=API_HASH,
     bot_token=BOT_TOKEN
 )
+TELETIPS_MAIN_MENU_BUTTONS = [
+            [
+                InlineKeyboardButton('❓ HELP', callback_data="HELP_CALLBACK")
+            ],
+            [
+                InlineKeyboardButton('👥 SUPPORT', callback_data="GROUP_CALLBACK"),
+                InlineKeyboardButton('📣 CHANNEL', url='https://t.me/botuptest'),
+                InlineKeyboardButton('👨‍💻 CREATOR', url='https://t.me/botuptest')
+            ],
+            [
+                InlineKeyboardButton('➕ CREATE YOUR BOT ➕', callback_data="TUTORIAL_CALLBACK")
+            ]
+        ]
 
-# Define a command handler for the /start command
-@bot.on_message(filters.command("start"))
-async def start_command(client, message):
-    welcome_message = (
-        "Welcome to the Countdown Timer Bot!\n"
-        "Send me the time in seconds, minutes, or hours to start the countdown."
+@bot.on_message(filters.command(['start','help']) & filters.private)
+async def start(client, message):
+    text = START_TEXT
+    reply_markup = InlineKeyboardMarkup(TELETIPS_MAIN_MENU_BUTTONS)
+    await message.reply(
+        text=text,
+        reply_markup=reply_markup,
+        disable_web_page_preview=True
     )
 
-    # Create InlineKeyboardButtons for joining the support group
-    support_button = InlineKeyboardButton("Join Support Group", url="https://t.me/XBOTSUPPORTS")
-    keyboard = InlineKeyboardMarkup([[support_button]])
+@bot.on_callback_query()
+async def callback_query(client: Client, query: CallbackQuery):
+    if query.data=="HELP_CALLBACK":
+        TELETIPS_HELP_BUTTONS = [
+            [
+                InlineKeyboardButton("⬅️ BACK", callback_data="START_CALLBACK")
+            ]
+            ]
+        reply_markup = InlineKeyboardMarkup(TELETIPS_HELP_BUTTONS)
+        try:
+            await query.edit_message_text(
+                HELP_TEXT,
+                reply_markup=reply_markup
+            )
+        except MessageNotModified:
+            pass
 
-    await message.reply_text(welcome_message, reply_markup=keyboard)
+    elif query.data=="GROUP_CALLBACK":
+        TELETIPS_GROUP_BUTTONS = [
+            [
+                InlineKeyboardButton("TeLe TiPs Chat [EN]", url="https://t.me/teletipsofficialontopicchat")
+            ],
+            [
+                InlineKeyboardButton("⬅️ BACK", callback_data="START_CALLBACK"),
+            ]
+            ]
+        reply_markup = InlineKeyboardMarkup(TELETIPS_GROUP_BUTTONS)
+        try:
+            await query.edit_message_text(
+                GROUP_TEXT,
+                reply_markup=reply_markup
+            )
+        except MessageNotModified:
+            pass    
 
-# Define a command handler for the /help command
-@bot.on_message(filters.command("help"))
-async def help_command(client, message):
-    help_message = (
-        "To start the countdown, use the /set command followed by the time duration and unit (seconds, minutes, or hours).\n\n"
-        "For example:\n"
-        "/set 60 seconds\n"
-        "/set 5 minutes\n"
-        "/set 2 hours"
-    )
-
-    # Create InlineKeyboardButtons for displaying bot usage format and joining the support group
-    usage_button = InlineKeyboardButton("Bot Usage Format", callback_data="usage_format")
-    support_button = InlineKeyboardButton("Join Support Group", url="https://t.me/XBOTSUPPORTS")
-    keyboard = InlineKeyboardMarkup([[usage_button], [support_button]])
-
-    await message.reply_text(help_message, reply_markup=keyboard)
+    elif query.data=="TUTORIAL_CALLBACK":
+        TELETIPS_TUTORIAL_BUTTONS = [
+            [
+                InlineKeyboardButton("🎥 Video", url="https://youtu.be/nYSrgdIYdTw")
+            ],
+            [
+                InlineKeyboardButton("⬅️ BACK", callback_data="START_CALLBACK"),
+            ]
+            ]
+        reply_markup = InlineKeyboardMarkup(TELETIPS_TUTORIAL_BUTTONS)
+        try:
+            await query.edit_message_text(
+                TUTORIAL_TEXT,
+                reply_markup=reply_markup
+            )
+        except MessageNotModified:
+            pass      
+          
+    elif query.data=="START_CALLBACK":
+        TELETIPS_START_BUTTONS = [
+            [
+                InlineKeyboardButton('❓ HELP', callback_data="HELP_CALLBACK")
+            ],
+            [
+                InlineKeyboardButton('👥 SUPPORT', callback_data="GROUP_CALLBACK"),
+                InlineKeyboardButton('📣 CHANNEL', url='https://t.me/botuptest'),
+                InlineKeyboardButton('👨‍💻 CREATOR', url='https://t.me/botuptest')
+            ],
+            [
+                InlineKeyboardButton('➕ CREATE YOUR BOT ➕', callback_data="TUTORIAL_CALLBACK")
+            ]
+        ]
+        reply_markup = InlineKeyboardMarkup(TELETIPS_START_BUTTONS)
+        try:
+            await query.edit_message_text(
+                START_TEXT,
+                reply_markup=reply_markup
+            )
+        except MessageNotModified:
+            pass    
 
 # Define a command handler for the /set command and countdown logic
 @bot.on_message(filters.command("set"))
