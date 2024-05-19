@@ -88,6 +88,8 @@ def run_flask():
 
 # Function to run the Pyrogram bot
 def run_bot():
+    loop = asyncio.new_event_loop()  # Create a new event loop
+    asyncio.set_event_loop(loop)     # Set the new event loop as the current one
     bot.run()
 
 if __name__ == "__main__":
